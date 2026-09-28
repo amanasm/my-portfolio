@@ -1,0 +1,149 @@
+.section-label span {
+  display: inline-block;
+  transform-origin: center;
+}
+
+.section.is-current .section-label span {
+  animation: section-marker .55s cubic-bezier(.2, .7, .1, 1) both;
+}
+
+.education-grid > .education-item:nth-child(2) { transition-delay: .08s; }
+.education-grid > .education-item:nth-child(3) { transition-delay: .16s; }
+.skills-grid > .skill-group:nth-child(2),
+.skills-grid > .skill-group:nth-child(5) { transition-delay: .08s; }
+.skills-grid > .skill-group:nth-child(3),
+.skills-grid > .skill-group:nth-child(6) { transition-delay: .16s; }
+.project-list > .project-row:nth-child(2) { transition-delay: .06s; }
+.project-list > .project-row:nth-child(3) { transition-delay: .12s; }
+.project-list > .project-row:nth-child(4) { transition-delay: .18s; }
+.project-list > .project-row:nth-child(5) { transition-delay: .24s; }
+.timeline .timeline-item:nth-child(2),
+.award-list .award:nth-child(2) { transition-delay: .1s; }
+
+.education-item,
+.timeline-item {
+  transition: transform .3s ease;
+}
+
+.education-item:hover { transform: translateY(-3px); }
+.timeline-item:hover { transform: translateX(4px); }
+
+.skill-group { transition: background .3s ease, transform .3s ease; }
+.skill-group:hover { transform: translateY(-4px); }
+
+.award {
+  transition: background .3s ease, padding .3s ease;
+}
+
+.award:hover {
+  background: color-mix(in oklab, var(--primary) 6%, transparent);
+  padding-left: 8px;
+}
+
+.extras .cert-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px;
+}
+
+.cert-list > span {
+  position: relative;
+  min-height: 88px;
+  align-items: center;
+  gap: 14px;
+  padding: 17px 40px 17px 15px;
+  border: 1px solid color-mix(in oklab, var(--primary) 30%, var(--border));
+  background: var(--card);
+  box-shadow: 0 5px 16px oklch(0.18 0.01 75 / 5%);
+  font-size: 13px;
+  line-height: 1.55;
+  transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease, background .3s ease;
+}
+
+.cert-list > span::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--primary);
+  content: '';
+  transform: scaleY(.28);
+  transform-origin: top;
+  transition: transform .3s ease;
+}
+
+.cert-list > span::after {
+  position: absolute;
+  top: 11px;
+  right: 13px;
+  color: var(--primary);
+  content: '+';
+  font-size: 17px;
+  line-height: 1;
+  transition: transform .3s ease;
+}
+
+.cert-list small {
+  display: grid;
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 1px solid color-mix(in oklab, var(--primary) 38%, var(--border));
+  border-radius: 50%;
+  color: var(--foreground);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.cert-list > span:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary);
+  background: white;
+  box-shadow: 0 13px 28px oklch(0.18 0.01 75 / 10%);
+}
+
+.cert-list > span:hover::before { transform: scaleY(1); }
+.cert-list > span:hover::after { transform: rotate(45deg); }
+
+.extra-block.is-visible .cert-list > span {
+  animation: cert-arrive .45s ease both;
+}
+
+.extra-block.is-visible .cert-list > span:nth-child(2) { animation-delay: .06s; }
+.extra-block.is-visible .cert-list > span:nth-child(3) { animation-delay: .12s; }
+.extra-block.is-visible .cert-list > span:nth-child(4) { animation-delay: .18s; }
+.extra-block.is-visible .cert-list > span:nth-child(5) { animation-delay: .24s; }
+.extra-block.is-visible .cert-list > span:nth-child(6) { animation-delay: .3s; }
+.extra-block.is-visible .cert-list > span:nth-child(7) { animation-delay: .36s; }
+
+.contact-links a { transition: color .2s ease, transform .25s ease; }
+.contact-links a:hover { transform: translateY(-3px); }
+.contact-links a svg:last-child { transition: transform .25s ease; }
+.contact-links a:hover svg:last-child { transform: translate(2px, -2px); }
+
+@keyframes section-marker {
+  0% { opacity: .55; transform: translateX(-5px) scale(.85); }
+  65% { opacity: 1; transform: translateX(2px) scale(1.12); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+@keyframes cert-arrive {
+  from { opacity: 0; filter: blur(3px); }
+  to { opacity: 1; filter: blur(0); }
+}
+
+@media (max-width: 760px) {
+  .extras .cert-list { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section.is-current .section-label span,
+  .extra-block.is-visible .cert-list > span { animation: none; }
+
+  .education-item,
+  .timeline-item,
+  .skill-group,
+  .award,
+  .cert-list > span,
+  .contact-links a,
+  .contact-links a svg:last-child { transition: none; }
+}

@@ -1,25 +1,29 @@
 import { useEffect, useRef, useState, createContext, useContext, type ReactNode } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 import { ActionButton } from './Button';
+import './motion.css';
 
-const SoundContext = createContext({ play: () => {}, enabled: false, toggle: () => {} });
+const SoundContext = createContext<{ play: (cue?: string) => void; enabled: boolean; toggle: () => void }>({ play: () => {}, enabled: false, toggle: () => {} });
+const sectionTones: Record<string, number> = { home: 523, about: 587, skills: 659, projects: 784, experience: 698, contact: 880 };
 export const useSound = () => useContext(SoundContext);
 export function Interactions({ children }: { children: ReactNode }) {
   const [enabled, setEnabled] = useState(false);
   const audio = useRef<AudioContext | null>(null);
-  const play = () => {
+  const play = (cue = 'tap') => {
     if (!enabled) return;
     try {
       const context = audio.current ?? new AudioContext(); audio.current = context;
       if (context.state === 'suspended') void context.resume();
       const oscillator = context.createOscillator(); const gain = context.createGain();
-      oscillator.type = 'sine'; oscillator.frequency.setValueAtTime(620, context.currentTime);
-      oscillator.frequency.exponentialRampToValueAtTime(920, context.currentTime + .09);
+      const frequency = sectionTones[cue] ?? 620;
+      const duration = cue === 'tap' ? .13 : .18;
+      oscillator.type = 'sine'; oscillator.frequency.setValueAtTime(frequency, context.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(cue === 'tap' ? 920 : frequency * 1.12, context.currentTime + .09);
       gain.gain.setValueAtTime(.0001, context.currentTime);
-      gain.gain.exponentialRampToValueAtTime(.035, context.currentTime + .015);
-      gain.gain.exponentialRampToValueAtTime(.0001, context.currentTime + .13);
+      gain.gain.exponentialRampToValueAtTime(cue === 'tap' ? .035 : .018, context.currentTime + .015);
+      gain.gain.exponentialRampToValueAtTime(.0001, context.currentTime + duration);
       oscillator.connect(gain); gain.connect(context.destination);
-      oscillator.start(); oscillator.stop(context.currentTime + .14);
+      oscillator.start(); oscillator.stop(context.currentTime + duration + .01);
     } catch { /* Audio is optional when the browser blocks it. */ }
   };
   useEffect(() => {
@@ -27,6 +31,14 @@ export function Interactions({ children }: { children: ReactNode }) {
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     return () => observer.disconnect();
   }, []);
+  useEffect(() => {
+    const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+      entry.target.classList.toggle('is-current', entry.isIntersecting);
+      if (entry.isIntersecting) play((entry.target as HTMLElement).id);
+    }), { rootMargin: '-45% 0px -45% 0px' });
+    document.querySelectorAll('main section[id]').forEach(section => observer.observe(section));
+    return () => observer.disconnect();
+  }, [enabled]);
   useEffect(() => {
     if (!window.matchMedia('(pointer: fine)').matches) return;
     const dot = document.querySelector<HTMLElement>('.cursor-dot');
