@@ -7,6 +7,34 @@
   animation: section-marker .55s cubic-bezier(.2, .7, .1, 1) both;
 }
 
+.nav-pill a {
+  position: relative;
+  transition: background .3s ease, color .3s ease, transform .3s cubic-bezier(.2, .7, .1, 1);
+}
+
+.nav-pill a:hover { transform: translateY(-2px); }
+.nav-pill a.active { box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--primary) 42%, transparent); }
+
+.section.is-current .section-intro,
+.section.is-current .about-layout,
+.section.is-current .education,
+.section.is-current .skills-grid,
+.section.is-current .projects-heading,
+.section.is-current .project-list,
+.section.is-current .experience-grid,
+.section.is-current .extras,
+.section.is-current .contact-kicker,
+.section.is-current .contact-copy,
+.section.is-current .contact-email,
+.section.is-current .contact-links {
+  animation: section-arrive .65s cubic-bezier(.2, .7, .1, 1) both;
+}
+
+.section.is-current .skills-grid,
+.section.is-current .project-list,
+.section.is-current .experience-grid,
+.section.is-current .extras { animation-delay: .08s; }
+
 .education-grid > .education-item:nth-child(2) { transition-delay: .08s; }
 .education-grid > .education-item:nth-child(3) { transition-delay: .16s; }
 .skills-grid > .skill-group:nth-child(2),
@@ -101,8 +129,15 @@
   box-shadow: 0 13px 28px oklch(0.18 0.01 75 / 10%);
 }
 
+.cert-list > span:focus-visible {
+  transform: translateY(-4px);
+  border-color: var(--primary);
+  box-shadow: 0 13px 28px oklch(0.18 0.01 75 / 10%);
+}
+
 .cert-list > span:hover::before { transform: scaleY(1); }
 .cert-list > span:hover::after { transform: rotate(45deg); }
+.cert-list > span:focus-visible::before { transform: scaleY(1); }
 
 .extra-block.is-visible .cert-list > span {
   animation: cert-arrive .45s ease both;
@@ -131,12 +166,29 @@
   to { opacity: 1; filter: blur(0); }
 }
 
+@keyframes section-arrive {
+  from { transform: translateY(12px); }
+  to { transform: translateY(0); }
+}
+
 @media (max-width: 760px) {
   .extras .cert-list { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .section.is-current .section-label span,
+  .section.is-current .section-intro,
+  .section.is-current .about-layout,
+  .section.is-current .education,
+  .section.is-current .skills-grid,
+  .section.is-current .projects-heading,
+  .section.is-current .project-list,
+  .section.is-current .experience-grid,
+  .section.is-current .extras,
+  .section.is-current .contact-kicker,
+  .section.is-current .contact-copy,
+  .section.is-current .contact-email,
+  .section.is-current .contact-links,
   .extra-block.is-visible .cert-list > span { animation: none; }
 
   .education-item,
